@@ -20,8 +20,11 @@ set number
 set ruler 
 
 
-" encoding은 시스템의 로케일을 따릅니다
-set fileencodings=utf-8,euc-kr,cp949
+" locale sensitive
+set encoding=utf-8
+set fileencodings=utf-8,euc-kr
+set termencoding=utf-8
+
 
 " The backspace key has slightly unintuitive behavior by default. For example,
 " by default, you can't backspace before the insertion point set with 'i'.
