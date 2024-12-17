@@ -20,6 +20,9 @@ set showmatch
 set number
 set ruler 
 
+" vim interpret number decimal not oct (vim < 8.0 default is oct)
+" <C-a>, <C-x> affected by this setting.
+set nrformats=
 
 " locale sensitive
 set encoding=utf-8
