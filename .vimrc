@@ -1,6 +1,16 @@
 syntax on
 filetype plugin indent on
 
+" [cursor shape]
+"--------------------------------------------------------------------------
+" 2 : block cursor, 
+" 5 : vertical cursor no blink, 6 : vertical cursor with blink
+
+" insert mode cursor
+let &t_SI = "\e[6 q"
+
+" normal mode cursor
+let &t_EI = "\e[2 q"
 
 " [editor view related setting]
 "--------------------------------------------------------------------------
