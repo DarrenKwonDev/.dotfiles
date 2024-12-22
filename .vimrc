@@ -37,7 +37,8 @@ set statusline=
 set statusline+=%#StatusLine#\ %l:%c            " 행:열
 set statusline+=%#StatusLineNC#\ [%p%%]         " 위치 퍼센트
 set statusline+=%=                              " 오른쪽 정렬
-set statusline+=%#StatusLine#\ [%t]               " 파일 이름
+set statusline+=%#StatusLine#\ [%t]          " 파일 이름
+set statusline+=%#StatusLineNC#\ [%{&filetype}]  " 파일 타입
 set statusline+=%#StatusLineNC#\ [%{&fileformat}] " 파일 포맷
 set statusline+=%#StatusLine#\ [%{&fileencoding?&fileencoding:&encoding}] " 인코딩
 
