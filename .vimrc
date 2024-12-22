@@ -1,5 +1,14 @@
+" vi non compatible mode. should enable to use vim's improved features
+"--------------------------------------------------------------------------
+set nocompatible
+
+
 syntax on
 filetype plugin indent on
+
+"debug print out
+"echom "[debug] Loading .vimrc..."
+
 
 " [cursor shape]
 "--------------------------------------------------------------------------
@@ -24,7 +33,6 @@ set number relativenumber
 " 0 : never, 1 : wnd >= 2, 2 : always
 set laststatus=2
 
-" statusline
 set statusline=
 set statusline+=%#StatusLine#\ %l:%c            " 행:열
 set statusline+=%#StatusLineNC#\ [%p%%]         " 위치 퍼센트
@@ -32,7 +40,6 @@ set statusline+=%=                              " 오른쪽 정렬
 set statusline+=%#StatusLine#\ %y               " 파일 타입
 set statusline+=%#StatusLineNC#\ [%{&fileformat}] " 파일 포맷
 set statusline+=%#StatusLine#\ [%{&fileencoding?&fileencoding:&encoding}] " 인코딩
-
 
 
 " {, [, ( 
@@ -48,14 +55,22 @@ set cindent
 set autoindent
 set smartindent
 
-
 " [search]
 "--------------------------------------------------------------------------
 " Enable searching as you type, rather than waiting till you press enter.
 set incsearch
 
-" highlight
+" [highlight]
+"--------------------------------------------------------------------------
+" highlight search result
 set hlsearch
+
+" highlight current word
+augroup highlight_current_word
+    autocmd!
+    autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
+augroup END
+
 
 " [tab]
 "--------------------------------------------------------------------------
@@ -129,6 +144,3 @@ set visualbell
 set nobackup
 set noswapfile
 set history=1000
-
-" vi non compatible mode. should enable to use vim's improved features
-set nocompatible
