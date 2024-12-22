@@ -3,7 +3,7 @@ filetype plugin indent on
 
 " [cursor shape]
 "--------------------------------------------------------------------------
-" 2 : block cursor, 
+" 2 : block cursor,
 " 5 : vertical cursor no blink, 6 : vertical cursor with blink
 
 " insert mode cursor
@@ -15,8 +15,25 @@ let &t_EI = "\e[2 q"
 " [editor view related setting]
 "--------------------------------------------------------------------------
 
-set number
-set ruler 
+" absolute number in current cursor line, relative number in other line 
+set number relativenumber
+
+" default ruler disable. use statusline
+"set ruler 
+
+" 0 : never, 1 : wnd >= 2, 2 : always
+set laststatus=2
+
+" statusline
+set statusline=
+set statusline+=%#StatusLine#\ %l:%c            " 행:열
+set statusline+=%#StatusLineNC#\ [%p%%]         " 위치 퍼센트
+set statusline+=%=                              " 오른쪽 정렬
+set statusline+=%#StatusLine#\ %y               " 파일 타입
+set statusline+=%#StatusLineNC#\ [%{&fileformat}] " 파일 포맷
+set statusline+=%#StatusLine#\ [%{&fileencoding?&fileencoding:&encoding}] " 인코딩
+
+
 
 " {, [, ( 
 set showmatch
