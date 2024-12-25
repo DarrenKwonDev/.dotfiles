@@ -145,3 +145,11 @@ set visualbell
 set nobackup
 set noswapfile
 set history=1000
+
+
+
+" [settings]
+"--------------------------------------------------------------------------
+" press %% in cmd mode, show current buffer's path
+cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
