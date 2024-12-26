@@ -15,7 +15,14 @@ filetype plugin indent on
 " tags for ctags, path, suffixesadd for gf(go to file), :find
 " mostly set by manual cmd by project structure
 
-set tags=
+set tags=tags;/ " recursively searches for 'tags' file from current directory up to root.
+
+" press f5 for generate ctags. should ctags installed get enlisted in $PATH
+":nnoremap <f5> :!ctags -R -v<CR>
+":nnoremap <f5> :!ctags -R && ls -l tags<CR>
+:nnoremap <f5> :!ctags -R -v --verbose<CR>
+
+
 set path=.,**
 set suffixesadd=
 
