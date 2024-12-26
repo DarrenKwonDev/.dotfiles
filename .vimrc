@@ -12,12 +12,40 @@ filetype plugin indent on
 
 " [tags, path]
 "--------------------------------------------------------------------------
-" tags for ctags, path for gf(go to file), :find
+" tags for ctags, path, suffixesadd for gf(go to file), :find
 " mostly set by manual cmd by project structure
 
 set tags=
-set path=
+set path=.,**
+set suffixesadd=
 
+function! DetectAndSetupProject()
+  " c/c++ project
+  if filereadable('Makefile') || filereadable('CMakeLists.txt')
+    setlocal path+=/usr/include/**,/usr/local/include/**
+    if isdirectory('include')
+      setlocal path+=include/**
+    endif
+    if isdirectory('src/include')
+      setlocal path+=src/include/**
+    endif
+    setlocal suffixesadd+=.h,.c,.hpp,.cpp
+  endif
+
+  " node.js proejct
+  if filereadable('package.json')
+    setlocal path+=src/**,components/**
+    setlocal suffixesadd+=.js,.jsx,.ts,.tsx
+  endif
+  
+  " python project
+  if filereadable('requirements.txt') || filereadable('setup.py')
+    setlocal suffixesadd+=.py
+  endif
+endfunction
+
+" when open buffer, call DetectAndSetupProject
+autocmd BufEnter * call DetectAndSetupProject()
 
 " [cursor shape]
 "--------------------------------------------------------------------------
