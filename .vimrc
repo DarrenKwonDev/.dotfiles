@@ -97,14 +97,12 @@ augroup END
 " use space when tab pressed
 set expandtab
 
-let g:indent_size = 2
-
 " should tabstop, softtabstop value same to avoid confusion
-set tabstop={g:indent_size}
-set softtabstop={g:indent_size}
+set tabstop=2 
+set softtabstop=2 
 
 " <, > indent affected by shiftwidth. should same with tabstop, softtabstop
-set shiftwidth={g:indent_size}
+set shiftwidth=2
 
 " [number format]
 "--------------------------------------------------------------------------
@@ -172,4 +170,3 @@ set history=1000
 "--------------------------------------------------------------------------
 " press %% in cmd mode, show current buffer's path
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
-
