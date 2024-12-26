@@ -10,6 +10,15 @@ filetype plugin indent on
 "echom "[debug] Loading .vimrc..."
 
 
+" [tags, path]
+"--------------------------------------------------------------------------
+" tags for ctags, path for gf(go to file), :find
+" mostly set by manual cmd by project structure
+
+set tags=
+set path=
+
+
 " [cursor shape]
 "--------------------------------------------------------------------------
 " 2 : block cursor,
@@ -34,27 +43,36 @@ set number relativenumber
 set laststatus=2
 
 set statusline=
-set statusline+=%#StatusLine#\ %l:%c            " 행:열
-set statusline+=%#StatusLineNC#\ [%p%%]         " 위치 퍼센트
-set statusline+=%=                              " 오른쪽 정렬
-set statusline+=%#StatusLine#\ [%t]          " 파일 이름
-set statusline+=%#StatusLineNC#\ [%{&filetype}]  " 파일 타입
-set statusline+=%#StatusLineNC#\ [%{&fileformat}] " 파일 포맷
-set statusline+=%#StatusLine#\ [%{&fileencoding?&fileencoding:&encoding}] " 인코딩
+set statusline+=%#StatusLine#\ %l:%c            " row:col
+set statusline+=%#StatusLineNC#\ [%p%%]         " pos percent 
+set statusline+=%=                              " for right align
+set statusline+=%#StatusLine#\ [%t]             " file name
+set statusline+=%#StatusLineNC#\ [%{&filetype}]
+set statusline+=%#StatusLineNC#\ [%{&fileformat}]
+set statusline+=%#StatusLine#\ [%{&fileencoding?&fileencoding:&encoding}]
 
 
-" {, [, ( 
+" {, [, ( is default, add <:> for html
 set showmatch
+set matchpairs+=<:>
 
 set cursorline
 " set cursorcolumn
 
+" show long line into one line. no line break
+set nowrap
 
-" [indent]
+" [indent, code align]
 "--------------------------------------------------------------------------
 set cindent
 set autoindent
 set smartindent
+
+:nnoremap Q gq
+
+set textwidth=80
+"set formatoptions+=tcqj
+
 
 " [search]
 "--------------------------------------------------------------------------
