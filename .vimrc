@@ -18,9 +18,7 @@ filetype plugin indent on
 set tags=tags;/ " recursively searches for 'tags' file from current directory up to root.
 
 " press f5 for generate ctags. should ctags installed get enlisted in $PATH
-":nnoremap <f5> :!ctags -R -v<CR>
-":nnoremap <f5> :!ctags -R && ls -l tags<CR>
-:nnoremap <f5> :!ctags -R -v --verbose<CR>
+:nnoremap <f5> :!ctags -R --verbose<CR>
 
 
 set path=.,**
