@@ -97,12 +97,14 @@ augroup END
 " use space when tab pressed
 set expandtab
 
+let g:indent_size = 2
+
 " should tabstop, softtabstop value same to avoid confusion
-set tabstop=2
-set softtabstop=2
+set tabstop={g:indent_size}
+set softtabstop={g:indent_size}
 
 " <, > indent affected by shiftwidth. should same with tabstop, softtabstop
-set shiftwidth=2
+set shiftwidth={g:indent_size}
 
 " [number format]
 "--------------------------------------------------------------------------
