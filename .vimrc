@@ -170,3 +170,61 @@ set history=1000
 "--------------------------------------------------------------------------
 " press %% in cmd mode, show current buffer's path
 cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
+
+
+" [tabline (buffer list)]
+"--------------------------------------------------------------------------
+set showtabline=2   "always show tabline
+
+hi TabLineFill term=NONE cterm=NONE
+hi TabLine term=NONE cterm=NONE
+hi TabLineSel term=reverse cterm=reverse
+
+function! BufferTabLine()
+  let s = ''
+  " save current buffer number
+  let current = bufnr('%')
+  
+  " use ls! cmd to check all buffer list
+  let l:buffers = []
+  let l:bufnames = execute('ls!')
+  for l:line in split(l:bufnames, "\n")
+    let l:match = matchlist(l:line, '\v\s*(\d+)[^"]*"([^"]*)"')
+    if !empty(l:match)
+      call add(l:buffers, l:match[1])
+    endif
+  endfor
+  
+  for l:bufnum in l:buffers
+    let i = str2nr(l:bufnum)
+    " current buffer highlight
+    if i == current
+      let s .= '%#TabLineSel#'
+    else
+      let s .= '%#TabLine#'
+    endif
+    
+    let s .= ' ' . i . ':'
+    
+    " modified buffer show *
+    if getbufvar(i, "&modified")
+      let s .= '* '
+    endif
+    
+    let bufname = bufname(i)
+    let fname = fnamemodify(bufname, ':t')
+    if fname == ''
+      let s .= '[No Name]'
+    else
+      let s .= strlen(fname) > 20 ? fname[0:17] . '...' : fname
+    endif
+    
+    let s .= ' '
+  endfor
+  
+  let s .= '%#TabLineFill#'
+  return s
+endfunction
+
+set tabline=%!BufferTabLine()
+
