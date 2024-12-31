@@ -76,7 +76,8 @@ set number relativenumber
 set laststatus=2
 
 set statusline=
-set statusline+=%#StatusLine#\ %l:%c            " row:col
+set statusline+=%#StatusLine#\ [PATH]:\ %F
+set statusline+=%#StatusLineNC#\ [LOC]\ %l:%c            " row:col
 set statusline+=%#StatusLineNC#\ [%p%%]         " pos percent 
 set statusline+=%=                              " for right align
 set statusline+=%#StatusLine#\ [%t]             " file name
@@ -209,9 +210,10 @@ cnoremap <expr> %% getcmdtype() == ':' ? expand('%:h').'/' : '%%'
 "--------------------------------------------------------------------------
 set showtabline=2   "always show tabline
 
+" 0 is black, 7 is lightgray, 8 is darkgray
 hi TabLineFill term=NONE cterm=NONE
-hi TabLine term=NONE cterm=NONE
-hi TabLineSel term=reverse cterm=reverse
+hi TabLine term=NONE cterm=NONE ctermfg=7 ctermbg=8
+hi TabLineSel term=bold cterm=bold ctermfg=0 ctermbg=7
 
 function! BufferTabLine()
   let s = ''
