@@ -90,6 +90,14 @@ set statusline+=%#StatusLine#\ [%{&fileencoding?&fileencoding:&encoding}]
 set showmatch
 set matchpairs+=<:>
 
+" auto close bracket
+inoremap { {}<Left>
+inoremap ( ()<Left>
+inoremap [ []<Left>
+inoremap " ""<Left>
+inoremap ' ''<Left>
+
+
 set cursorline
 " set cursorcolumn
 
@@ -262,4 +270,3 @@ function! BufferTabLine()
 endfunction
 
 set tabline=%!BufferTabLine()
-
