@@ -63,6 +63,12 @@ let &t_SI = "\e[6 q"
 " normal mode cursor
 let &t_EI = "\e[2 q"
 
+" [scroll]
+"--------------------------------------------------------------------------
+" when cursor reach 3/4 of window, window scroll. 
+" this option mimicking of vscode default setting. 
+let &scrolloff = float2nr(winheight(0) * 0.25)
+
 " [editor view related setting]
 "--------------------------------------------------------------------------
 
@@ -270,3 +276,10 @@ function! BufferTabLine()
 endfunction
 
 set tabline=%!BufferTabLine()
+
+
+" [snippet]
+"--------------------------------------------------------------------------
+
+"inoremap for<Tab> for (size_t i = 0; i < ; i++) {<CR>}<Esc>k$hi
+
