@@ -10,6 +10,12 @@ filetype plugin indent on
 "echom "[debug] Loading .vimrc..."
 
 
+" [vim variables]
+"--------------------------------------------------------------------------
+" use space as <Leader>
+let mapleader=" " 
+
+
 " [tags, path]
 "--------------------------------------------------------------------------
 " tags for ctags, path, suffixesadd for gf(go to file), :find
@@ -121,6 +127,12 @@ set smartindent
 set textwidth=80
 "set formatoptions+=tcqj
 
+" whole indentation and return prev cursor)
+" mz = current cursor save z marker
+" gg = go to line number 1
+" =G = whole indentation
+" `z = turn back to z mark
+:nnoremap <Leader>g mzgg=G`z
 
 " [search]
 "--------------------------------------------------------------------------
