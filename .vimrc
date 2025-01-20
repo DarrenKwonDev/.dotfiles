@@ -187,6 +187,10 @@ set termencoding=utf-8
 " backspace over anything.
 set backspace=indent,eol,start
 
+" backspace fix for xterm
+set t_kb=^H
+inoremap <Char-0x07F> <BS>
+inoremap <Char-0x0C> <Space>
 
 " [hidden]
 "--------------------------------------------------------------------------
