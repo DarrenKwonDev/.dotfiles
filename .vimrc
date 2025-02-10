@@ -26,7 +26,6 @@ set tags=tags;/ " recursively searches for 'tags' file from current directory up
 :nnoremap <f5> :!ctags -R --verbose<CR>
 
 function! ShowFileTags()
-    " 이미 태그 창이 열려있는지 확인
     let l:win = bufwinnr('__TagList__')
     if l:win != -1
         noautocmd execute l:win . 'wincmd w'
@@ -35,54 +34,79 @@ function! ShowFileTags()
 
     let l:tmpfile = tempname()
     let l:curr_file = expand('%:p')
-
-    " ctags 명령어 실행 (-x 옵션 사용)
-    execute 'silent !ctags -x --c-kinds=fs --c++-kinds=fs ' . l:curr_file . ' > ' . l:tmpfile
-
-    " 원본 파일의 버퍼 번호 저장
+    
+    " ctags 명령어 수정
+    execute 'silent !ctags -f - --format=2 --excmd=pattern --fields=+n -R --sort=no --c-kinds=+pe ' . l:curr_file . ' > ' . l:tmpfile
+    
     let l:orig_bufnr = bufnr('%')
-
-    " 새 버퍼 생성
     noautocmd vertical topleft new __TagList__
     setlocal noreadonly
     setlocal modifiable
     vertical resize 30
-
-    " 태그 파일 내용 처리
+    
+    " 태그 처리
     let l:tags = []
+    let l:current_enum = ''
+    let l:enum_members = []
+    let l:delayed_tags = []
+    
+    " 먼저 모든 태그를 읽어서 enum을 찾음
     for line in readfile(l:tmpfile)
-        " 함수/구조체 이름만 추출
-        let l:parts = split(line)
-        if len(l:parts) >= 1
-            call add(l:tags, l:parts[0])
+        let l:parts = split(line, '\t')
+        if len(l:parts) >= 4
+            let l:name = l:parts[0]
+            let l:kind = l:parts[3][0]
+            
+            " enum 타입을 먼저 찾아서 저장
+            if l:kind ==# 'g'  " enum 정의
+                let l:current_enum = l:name
+                call add(l:tags, '>E ' . l:name)
+            endif
         endif
     endfor
-
-    " 정리된 태그 목록을 버퍼에 삽입
+    
+    " 다시 파일을 읽어서 나머지 태그들을 처리
+    for line in readfile(l:tmpfile)
+        let l:parts = split(line, '\t')
+        if len(l:parts) >= 4
+            let l:name = l:parts[0]
+            let l:kind = l:parts[3][0]
+            
+            if l:kind ==# 'e'  " enum 멤버
+                call add(l:tags, '  ├─ ' . l:name)
+            elseif l:kind ==# 'f'
+                call add(l:delayed_tags, '>F ' . l:name)
+            elseif l:kind ==# 'v'
+                call add(l:delayed_tags, '>V ' . l:name)
+            endif
+        endif
+    endfor
+    
+    " 나머지 태그들을 추가
+    call extend(l:tags, l:delayed_tags)
+    
+    " 태그 목록을 버퍼에 삽입
     call setline(1, l:tags)
-
-    " 버퍼 옵션 설정
+    
+    " 버퍼 설정
     setlocal buftype=nofile
     setlocal bufhidden=delete
     setlocal nobuflisted
     setlocal noswapfile
     setlocal nomodifiable
     setlocal readonly
-
-    " 이전 TagList 버퍼가 있다면 강제로 제거
+    
+    " 이전 TagList 버퍼 정리
     for buf in range(1, bufnr('$'))
         if buflisted(buf) && bufname(buf) == '__TagList__' && buf != bufnr('%')
             execute 'bdelete! ' . buf
         endif
     endfor
-
-    " 키매핑 설정
+    
+    " 키 매핑
     nnoremap <buffer> q :close<CR>
-
-    " 임시 파일 삭제
+    
     call delete(l:tmpfile)
-
-    " 화면 강제 리드로우
     redraw!
 endfunction
 
@@ -238,10 +262,10 @@ set nrformats=
 " [encoding]
 "--------------------------------------------------------------------------
 " locale sensitive. but notice that korean stock market use euc-kr
-""set encoding=utf-8
+set encoding=utf-8
 ""set fileencodings=utf-8
 ""set termencoding=utf-8
-set encoding=euc-kr
+""set encoding=euc-kr
 
 " [backspace]
 "--------------------------------------------------------------------------

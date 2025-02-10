@@ -24,8 +24,20 @@ if [ -d ~/.bashrc.d ]; then
 	done
 fi
 
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
+
+
 unset rc
 . "$HOME/.cargo/env"
+
+
+#------------------------------------------------
+# nvim
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 
 
 #------------------------------------------------
