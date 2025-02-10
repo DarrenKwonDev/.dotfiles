@@ -403,7 +403,7 @@ set mouse=r
 "--------------------------------------------------------------------------
 set visualbell
 set nobackup
-" set noswapfile
+" set noswapfile " 동시 편집하는 경우가 많아서 swp은 반드시 존재해야 한다.
 set history=1000
 
 
