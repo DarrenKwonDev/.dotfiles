@@ -25,61 +25,69 @@ set tags=tags;/ " recursively searches for 'tags' file from current directory up
 " press f5 for generate ctags. should ctags installed get enlisted in $PATH
 :nnoremap <f5> :!ctags -R --verbose<CR>
 
-
-" 태그 네비게이션 단축키
-" 새 창에서 태그 열기
-nnoremap <Leader>] :vsp<CR>:tjump <C-R><C-W><CR>   " 수직 분할
-nnoremap <Leader>[ :sp<CR>:tjump <C-R><C-W><CR>    " 수평 분할
-nnoremap <Leader>t <C-t>                           " 이전 태그로 돌아가기
-
-" 현재 파일의 함수/구조체 목록 보기
 function! ShowFileTags()
     " 이미 태그 창이 열려있는지 확인
     let l:win = bufwinnr('__TagList__')
     if l:win != -1
-        " 이미 열려있다면 해당 창으로 포커스 이동
-        execute l:win . 'wincmd w'
+        noautocmd execute l:win . 'wincmd w'
         return
     endif
 
     let l:tmpfile = tempname()
     let l:curr_file = expand('%:p')
+
+    " ctags 명령어 실행 (-x 옵션 사용)
     execute 'silent !ctags -x --c-kinds=fs --c++-kinds=fs ' . l:curr_file . ' > ' . l:tmpfile
 
-    vertical topleft new
+    " 원본 파일의 버퍼 번호 저장
+    let l:orig_bufnr = bufnr('%')
+
+    " 새 버퍼 생성
+    noautocmd vertical topleft new __TagList__
+    setlocal noreadonly
+    setlocal modifiable
     vertical resize 30
 
-    " 버퍼 이름 설정
-    file __TagList__
-    
-    execute 'silent read ' . l:tmpfile
-    silent! execute '0d'
-    
+    " 태그 파일 내용 처리
+    let l:tags = []
+    for line in readfile(l:tmpfile)
+        " 함수/구조체 이름만 추출
+        let l:parts = split(line)
+        if len(l:parts) >= 1
+            call add(l:tags, l:parts[0])
+        endif
+    endfor
+
+    " 정리된 태그 목록을 버퍼에 삽입
+    call setline(1, l:tags)
+
     " 버퍼 옵션 설정
-    setlocal buftype=nofile 
-    setlocal bufhidden=wipe 
-    setlocal nobuflisted 
-    setlocal noswapfile 
-    setlocal readonly
+    setlocal buftype=nofile
+    setlocal bufhidden=delete
+    setlocal nobuflisted
+    setlocal noswapfile
     setlocal nomodifiable
-    
-    " 매핑 설정
-    nnoremap <buffer> <CR> :call JumpToTag()<CR>
+    setlocal readonly
+
+    " 이전 TagList 버퍼가 있다면 강제로 제거
+    for buf in range(1, bufnr('$'))
+        if buflisted(buf) && bufname(buf) == '__TagList__' && buf != bufnr('%')
+            execute 'bdelete! ' . buf
+        endif
+    endfor
+
+    " 키매핑 설정
     nnoremap <buffer> q :close<CR>
-endfunction
 
+    " 임시 파일 삭제
+    call delete(l:tmpfile)
 
-" 태그 목록에서 선택한 위치로 점프
-function! JumpToTag()
-    let l:line = getline('.')
-    let l:tag = split(l:line)[0]
-    wincmd p
-    execute 'tag ' . l:tag
+    " 화면 강제 리드로우
+    redraw!
 endfunction
 
 " 태그 목록 열기 단축키
 nnoremap <Leader>tl :call ShowFileTags()<CR>
-
 
 " [path]
 "--------------------------------------------------------------------------
@@ -87,28 +95,28 @@ set path=.,**
 set suffixesadd=
 
 function! DetectAndSetupProject()
-  " c/c++ project
-  if filereadable('Makefile') || filereadable('CMakeLists.txt')
-    setlocal path+=/usr/include/**,/usr/local/include/**
-    if isdirectory('include')
-      setlocal path+=include/**
+    " c/c++ project
+    if filereadable('Makefile') || filereadable('CMakeLists.txt')
+        setlocal path+=/usr/include/**,/usr/local/include/**
+        if isdirectory('include')
+            setlocal path+=include/**
+        endif
+        if isdirectory('src/include')
+            setlocal path+=src/include/**
+        endif
+        setlocal suffixesadd+=.h,.c,.hpp,.cpp
     endif
-    if isdirectory('src/include')
-      setlocal path+=src/include/**
-    endif
-    setlocal suffixesadd+=.h,.c,.hpp,.cpp
-  endif
 
-  " node.js proejct
-  if filereadable('package.json')
-    setlocal path+=src/**,components/**
-    setlocal suffixesadd+=.js,.jsx,.ts,.tsx
-  endif
-  
-  " python project
-  if filereadable('requirements.txt') || filereadable('setup.py')
-    setlocal suffixesadd+=.py
-  endif
+    " node.js proejct
+    if filereadable('package.json')
+        setlocal path+=src/**,components/**
+        setlocal suffixesadd+=.js,.jsx,.ts,.tsx
+    endif
+
+    " python project
+    if filereadable('requirements.txt') || filereadable('setup.py')
+        setlocal suffixesadd+=.py
+    endif
 endfunction
 
 " when open buffer, call DetectAndSetupProject
@@ -303,49 +311,53 @@ hi TabLine term=NONE cterm=NONE ctermfg=7 ctermbg=8
 hi TabLineSel term=bold cterm=bold ctermfg=0 ctermbg=7
 
 function! BufferTabLine()
-  let s = ''
-  " save current buffer number
-  let current = bufnr('%')
-  
-  " use ls! cmd to check all buffer list
-  let l:buffers = []
-  let l:bufnames = execute('ls!')
-  for l:line in split(l:bufnames, "\n")
-    let l:match = matchlist(l:line, '\v\s*(\d+)[^"]*"([^"]*)"')
-    if !empty(l:match)
-      call add(l:buffers, l:match[1])
-    endif
-  endfor
-  
-  for l:bufnum in l:buffers
-    let i = str2nr(l:bufnum)
-    " current buffer highlight
-    if i == current
-      let s .= '%#TabLineSel#'
-    else
-      let s .= '%#TabLine#'
-    endif
-    
-    let s .= ' ' . i . ':'
-    
-    " modified buffer show *
-    if getbufvar(i, "&modified")
-      let s .= '* '
-    endif
-    
-    let bufname = bufname(i)
-    let fname = fnamemodify(bufname, ':t')
-    if fname == ''
-      let s .= '[No Name]'
-    else
-      let s .= strlen(fname) > 20 ? fname[0:17] . '...' : fname
-    endif
-    
-    let s .= ' '
-  endfor
-  
-  let s .= '%#TabLineFill#'
-  return s
+   let s = ''
+   " save current buffer number
+   let current = bufnr('%')
+
+   " use ls! cmd to check all buffer list  
+   let l:buffers = []
+   let l:bufnames = execute('ls!')
+   for l:line in split(l:bufnames, "\n")
+       let l:match = matchlist(l:line, '\v\s*(\d+)[^"]*"([^"]*)"')
+       if !empty(l:match)
+           let l:bufnum = str2nr(l:match[1])
+           if buflisted(l:bufnum)  " check if buffer exists
+               call add(l:buffers, l:match[1])
+           endif
+       endif
+   endfor
+
+   for l:bufnum in l:buffers
+       let i = str2nr(l:bufnum)
+       " current buffer highlight
+       if i == current
+           let s .= '%#TabLineSel#'
+       else
+           let s .= '%#TabLine#'
+       endif
+
+       let s .= ' ' . i . ':'
+
+       " modified buffer show *
+       if getbufvar(i, "&modified")
+           let s .= '* '
+       endif
+
+       let bufname = bufname(i)
+       let fname = fnamemodify(bufname, ':t')
+       if fname == ''
+           let s .= '[No Name]'
+       else
+           let s .= strlen(fname) > 20 ? fname[0:17] . '...' : fname
+       endif
+
+       let s .= ' '
+   endfor
+
+   let s .= '%#TabLineFill#'
+   return s
 endfunction
 
 set tabline=%!BufferTabLine()
+autocmd BufDelete * redraw!
