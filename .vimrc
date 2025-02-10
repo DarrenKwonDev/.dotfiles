@@ -16,17 +16,73 @@ filetype plugin indent on
 let mapleader=" " 
 
 
-" [tags, path]
+" [tags]
 "--------------------------------------------------------------------------
 " tags for ctags, path, suffixesadd for gf(go to file), :find
 " mostly set by manual cmd by project structure
 
 set tags=tags;/ " recursively searches for 'tags' file from current directory up to root.
-
 " press f5 for generate ctags. should ctags installed get enlisted in $PATH
 :nnoremap <f5> :!ctags -R --verbose<CR>
 
 
+" 태그 네비게이션 단축키
+" 새 창에서 태그 열기
+nnoremap <Leader>] :vsp<CR>:tjump <C-R><C-W><CR>   " 수직 분할
+nnoremap <Leader>[ :sp<CR>:tjump <C-R><C-W><CR>    " 수평 분할
+nnoremap <Leader>t <C-t>                           " 이전 태그로 돌아가기
+
+" 현재 파일의 함수/구조체 목록 보기
+function! ShowFileTags()
+    " 이미 태그 창이 열려있는지 확인
+    let l:win = bufwinnr('__TagList__')
+    if l:win != -1
+        " 이미 열려있다면 해당 창으로 포커스 이동
+        execute l:win . 'wincmd w'
+        return
+    endif
+
+    let l:tmpfile = tempname()
+    let l:curr_file = expand('%:p')
+    execute 'silent !ctags -x --c-kinds=fs --c++-kinds=fs ' . l:curr_file . ' > ' . l:tmpfile
+
+    vertical topleft new
+    vertical resize 30
+
+    " 버퍼 이름 설정
+    file __TagList__
+    
+    execute 'silent read ' . l:tmpfile
+    silent! execute '0d'
+    
+    " 버퍼 옵션 설정
+    setlocal buftype=nofile 
+    setlocal bufhidden=wipe 
+    setlocal nobuflisted 
+    setlocal noswapfile 
+    setlocal readonly
+    setlocal nomodifiable
+    
+    " 매핑 설정
+    nnoremap <buffer> <CR> :call JumpToTag()<CR>
+    nnoremap <buffer> q :close<CR>
+endfunction
+
+
+" 태그 목록에서 선택한 위치로 점프
+function! JumpToTag()
+    let l:line = getline('.')
+    let l:tag = split(l:line)[0]
+    wincmd p
+    execute 'tag ' . l:tag
+endfunction
+
+" 태그 목록 열기 단축키
+nnoremap <Leader>tl :call ShowFileTags()<CR>
+
+
+" [path]
+"--------------------------------------------------------------------------
 set path=.,**
 set suffixesadd=
 
@@ -158,11 +214,11 @@ augroup END
 set expandtab
 
 " should tabstop, softtabstop value same to avoid confusion
-set tabstop=2 
-set softtabstop=2 
+set tabstop=4 
+set softtabstop=4
 
 " <, > indent affected by shiftwidth. should same with tabstop, softtabstop
-set shiftwidth=2
+set shiftwidth=4
 
 " [number format]
 "--------------------------------------------------------------------------
@@ -174,10 +230,10 @@ set nrformats=
 " [encoding]
 "--------------------------------------------------------------------------
 " locale sensitive. but notice that korean stock market use euc-kr
-set encoding=utf-8
-set fileencodings=utf-8
-set termencoding=utf-8
-
+""set encoding=utf-8
+""set fileencodings=utf-8
+""set termencoding=utf-8
+set encoding=euc-kr
 
 " [backspace]
 "--------------------------------------------------------------------------
@@ -187,10 +243,11 @@ set termencoding=utf-8
 " backspace over anything.
 set backspace=indent,eol,start
 
-" backspace fix for xterm
+" Backspace fix for xterm
 set t_kb=^H
 inoremap <Char-0x07F> <BS>
 inoremap <Char-0x0C> <Space>
+
 
 " [hidden]
 "--------------------------------------------------------------------------
@@ -225,7 +282,7 @@ set mouse=r
 "--------------------------------------------------------------------------
 set visualbell
 set nobackup
-set noswapfile
+" set noswapfile
 set history=1000
 
 
@@ -292,10 +349,3 @@ function! BufferTabLine()
 endfunction
 
 set tabline=%!BufferTabLine()
-
-
-" [snippet]
-"--------------------------------------------------------------------------
-
-"inoremap for<Tab> for (size_t i = 0; i < ; i++) {<CR>}<Esc>k$hi
-
