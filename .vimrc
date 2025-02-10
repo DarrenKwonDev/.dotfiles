@@ -26,12 +26,12 @@ set tags=tags;/ " recursively searches for 'tags' file from current directory up
 :nnoremap <f5> :!ctags -R --verbose<CR>
 
 function! ShowFileTags()
-    " TagList 버퍼에서 커서가 있을 때 새 버퍼 열기를 막음
+    " Prevent opening new buffer in TagList buffer
     if bufname('%') ==# '__TagList__'
         return
     endif
 
-    " 기존 TagList 윈도우가 있다면 닫기
+    " Close existing TagList window if exists
     let l:existing_win = bufwinnr('__TagList__')
     if l:existing_win != -1
         execute l:existing_win . 'wincmd c'
@@ -40,8 +40,19 @@ function! ShowFileTags()
     let l:tmpfile = tempname()
     let l:curr_file = expand('%:p')
 
-    " ctags 명령어 - 매크로와 구조체 멤버 포함
-    execute 'silent !ctags -f - --format=2 --excmd=pattern --fields=+nks -R --sort=no --c-kinds=+pedsm ' . l:curr_file . ' > ' . l:tmpfile
+    " Run ctags with all necessary fields
+    let l:ctags_cmd = 'ctags -f - --format=2 --excmd=pattern --fields=+nks -R --sort=no --c-kinds=+pesdmvx '
+    let l:ctags_result = system(l:ctags_cmd . shellescape(l:curr_file))
+    
+    " Check if ctags command failed
+    if v:shell_error
+        echohl ErrorMsg
+        echo "Error running ctags command"
+        echohl None
+        return
+    endif
+
+    call writefile(split(l:ctags_result, '\n'), l:tmpfile)
 
     let l:orig_bufnr = bufnr('%')
     noautocmd vertical topleft new __TagList__
@@ -49,78 +60,130 @@ function! ShowFileTags()
     setlocal modifiable
     vertical resize 50
 
-    " 태그 처리
     let l:tags = []
-    let l:current_struct = ''
-    let l:delayed_tags = []
+    
+    " === Section 1: Macros ===
     let l:macros = []
-
-    " 먼저 모든 태그를 읽어서 매크로를 찾음
+    call add(l:tags, '=== Macros ===')
     for line in readfile(l:tmpfile)
         let l:parts = split(line, '\t')
-        if len(l:parts) >= 4
-            let l:name = l:parts[0]
-            let l:kind = l:parts[3][0]
-
-            if l:kind ==# 'd'  " 매크로 정의
-                call add(l:tags, '>D ' . l:name)
-            endif
+        if len(l:parts) >= 4 && l:parts[3][0] ==# 'd'
+            call add(l:macros, '>M ' . l:parts[0])
         endif
     endfor
+    call extend(l:tags, sort(l:macros))
 
-    " 구조체와 멤버들 처리
+    " === Section 2: Structs ===
+    call add(l:tags, '')
+    call add(l:tags, '=== Structures ===')
+    let l:structs = {}
     for line in readfile(l:tmpfile)
         let l:parts = split(line, '\t')
         if len(l:parts) >= 4
             let l:name = l:parts[0]
             let l:kind = l:parts[3][0]
-
-            if l:kind ==# 's'  " 구조체 정의
-                let l:current_struct = l:name
-                call add(l:tags, '>S ' . l:name)
-            elseif l:kind ==# 'm'  " 구조체 멤버
-                if l:current_struct != ''
-                    call add(l:tags, '  ├─ ' . l:name)
+            
+            if l:kind ==# 's'
+                let l:structs[l:name] = []
+            elseif l:kind ==# 'm'
+                let l:scope = ''
+                for field in l:parts[3:]
+                    if field =~ '^struct:'
+                        let l:scope = substitute(field, '^struct:', '', '')
+                        break
+                    endif
+                endfor
+                if has_key(l:structs, l:scope)
+                    call add(l:structs[l:scope], l:name)
                 endif
             endif
         endif
     endfor
+    
+    for struct_name in sort(keys(l:structs))
+        call add(l:tags, '>S ' . struct_name)
+        let l:members = sort(l:structs[struct_name])
+        let l:last_idx = len(l:members) - 1
+        for idx in range(len(l:members))
+            if idx == l:last_idx
+                call add(l:tags, '  └─ ' . l:members[idx])
+            else
+                call add(l:tags, '  ├─ ' . l:members[idx])
+            endif
+        endfor
+    endfor
 
-    " enum 처리
+    " === Section 3: Enums ===
+    call add(l:tags, '')
+    call add(l:tags, '=== Enums ===')
+    let l:enums = {}
     for line in readfile(l:tmpfile)
         let l:parts = split(line, '\t')
         if len(l:parts) >= 4
             let l:name = l:parts[0]
             let l:kind = l:parts[3][0]
-
-            if l:kind ==# 'g'  " enum 정의
-                let l:current_enum = l:name
-                call add(l:tags, '>E ' . l:name)
-            elseif l:kind ==# 'e'  " enum 멤버
-                call add(l:tags, '  ├─ ' . l:name)
+            
+            if l:kind ==# 'g'
+                let l:enums[l:name] = []
+            elseif l:kind ==# 'e'
+                let l:scope = ''
+                for field in l:parts[3:]
+                    if field =~ '^enum:'
+                        let l:scope = substitute(field, '^enum:', '', '')
+                        break
+                    endif
+                endfor
+                if has_key(l:enums, l:scope)
+                    call add(l:enums[l:scope], l:name)
+                endif
             endif
         endif
     endfor
+    
+    for enum_name in sort(keys(l:enums))
+        call add(l:tags, '>E ' . enum_name)
+        let l:members = sort(l:enums[enum_name])
+        let l:last_idx = len(l:members) - 1
+        for idx in range(len(l:members))
+            if idx == l:last_idx
+                call add(l:tags, '  └─ ' . l:members[idx])
+            else
+                call add(l:tags, '  ├─ ' . l:members[idx])
+            endif
+        endfor
+    endfor
 
-    " 함수와 변수 추가
+    " === Section 4: Functions ===
+    let l:functions = []
+    call add(l:tags, '')
+    call add(l:tags, '=== Functions ===')
+    for line in readfile(l:tmpfile)
+        let l:parts = split(line, '\t')
+        if len(l:parts) >= 4 && l:parts[3][0] ==# 'f'
+            call add(l:functions, '>F ' . l:parts[0])
+        endif
+    endfor
+    call extend(l:tags, sort(l:functions))
+
+    " === Section 5: Variables (at the bottom) ===
+    let l:variables = []
+    call add(l:tags, '')
+    call add(l:tags, '=== Variables ===')
     for line in readfile(l:tmpfile)
         let l:parts = split(line, '\t')
         if len(l:parts) >= 4
-            let l:name = l:parts[0]
             let l:kind = l:parts[3][0]
-
-            if l:kind ==# 'f'
-                call add(l:tags, '>F ' . l:name)
-            elseif l:kind ==# 'v'
-                call add(l:tags, '>V ' . l:name)
+            if l:kind ==# 'v' || l:kind ==# 'x'  " local or external variables
+                call add(l:variables, '>V ' . l:parts[0])
             endif
         endif
     endfor
+    call extend(l:tags, sort(l:variables))
 
-    " 태그 목록을 버퍼에 삽입
+    " Insert tag list into buffer
     call setline(1, l:tags)
 
-    " 버퍼 설정
+    " Buffer settings
     setlocal buftype=nofile
     setlocal bufhidden=delete
     setlocal nobuflisted
@@ -128,20 +191,13 @@ function! ShowFileTags()
     setlocal nomodifiable
     setlocal readonly
 
-    " 이전 TagList 버퍼 정리
-    for buf in range(1, bufnr('$'))
-        if buflisted(buf) && bufname(buf) == '__TagList__' && buf != bufnr('%')
-            execute 'bdelete! ' . buf
-        endif
-    endfor
-
-    " 키 매핑
+    " Key mapping
     nnoremap <buffer> q :close<CR>
 
+    " Clean up
     call delete(l:tmpfile)
     redraw!
 endfunction
-
 
 " 태그 목록 열기 단축키
 nnoremap <Leader>tl :call ShowFileTags()<CR>
