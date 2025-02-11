@@ -74,6 +74,16 @@ function! ShowFileTags()
         return
     endif
 
+
+    let l:filtered_result = []
+    for line in split(l:ctags_result, '\n')
+        let l:parts = split(line, '\t')
+        if len(l:parts) >= 1 && l:parts[0] !~ '^anon'
+            call add(l:filtered_result, line)
+        endif
+    endfor
+
+
     call writefile(split(l:ctags_result, '\n'), l:tmpfile)
 
     let l:orig_bufnr = bufnr('%')
