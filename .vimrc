@@ -58,7 +58,7 @@ function! ShowFileTags()
     noautocmd vertical topleft new __TagList__
     setlocal noreadonly
     setlocal modifiable
-    vertical resize 50
+    vertical resize 30
 
     let l:tags = []
     
