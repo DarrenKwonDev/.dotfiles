@@ -410,10 +410,10 @@ set nrformats=
 " [encoding]
 "--------------------------------------------------------------------------
 " locale sensitive. but notice that korean stock market use euc-kr
-set encoding=utf-8
+""set encoding=utf-8
 ""set fileencodings=utf-8
 ""set termencoding=utf-8
-""set encoding=euc-kr
+set encoding=euc-kr
 
 " [backspace]
 "--------------------------------------------------------------------------
