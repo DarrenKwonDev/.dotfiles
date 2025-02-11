@@ -179,6 +179,31 @@ function! ShowFileTags()
         endif
     endfor
     call extend(l:tags, sort(l:variables))
+    
+    " === Section 6: Function Calls ===
+    let l:function_calls = []
+    call add(l:tags, '')
+    call add(l:tags, '=== External Calls ===')
+    
+    " Parse the current buffer for function calls
+    let l:buffer_content = getbufline(l:orig_bufnr, 1, '$')
+    let l:seen_calls = {}
+    
+    for line in l:buffer_content
+        " Match function calls: word followed by opening parenthesis
+        let l:matches = matchlist(line, '\(\w\+\)\s*(')
+        if !empty(l:matches)
+            let l:func_name = l:matches[1]
+            " Skip if we've seen this call before or if it's already in our tags
+            if !has_key(l:seen_calls, l:func_name) && 
+                \ index(l:functions, '>F ' . l:func_name) == -1 && 
+                \ index(l:macros, '>M ' . l:func_name) == -1
+                let l:seen_calls[l:func_name] = 1
+                call add(l:function_calls, '>X ' . l:func_name)
+            endif
+        endif
+    endfor
+    call extend(l:tags, sort(l:function_calls))
 
     " Insert tag list into buffer
     call setline(1, l:tags)
