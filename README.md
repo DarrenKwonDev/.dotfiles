@@ -1,10 +1,16 @@
-# air-gapped-toolkit
+# air-gapped-dotfiles
 
 ## 왜?
 
-폐쇄망 환경(ex - 증권사에서 제공하는 DMA) 내에서 개발을 해야 한느 경우  
+폐쇄망 환경(ex - 증권사에서 제공하는 DMA) 내에서 개발을 해야 하는 경우  
 순수한 vim과 gcc만으로 개발을 해야 하는 상황이 있음.  
-개인적으로 쓰는 .vimrc나 bash, 직접 만든 vim plugin 등을 저장해두자.  
+특히, DMA 상황이라면 vscode가 원격 접속하기 위해 생성된 프로세스 마저도
+latency에 기여하여 매매에 영향을 미치기도 함.
+
+When developing in an air-gapped environment (e.g., DMA provided by securities firms),
+there are situations where development must be done using only vim and gcc.
+Specifically, in DMA environments, even the processes created by VSCode's remote access
+can contribute to latency that may affect trading performance.
 
 ### vim work view
 
