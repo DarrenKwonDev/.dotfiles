@@ -16,6 +16,28 @@ filetype plugin indent on
 let mapleader=" " 
 
 
+" ===== Tag list settings =====
+let g:reserved_keywords = [
+            \ 'if', 'else', 'while', 'do', 'for', 'switch', 'case', 'break',
+            \ 'continue', 'return', 'goto', 'sizeof', 'typedef',
+            \ 'void', 'char', 'short', 'int', 'long', 'float', 'double',
+            \ 'signed', 'unsigned', 'const', 'volatile', 'register', 'static', 'extern',
+            \ 'struct', 'union', 'enum', 'class', 'namespace', 'template', 'typename',
+            \
+            \ 'def', 'class', 'lambda', 'try', 'except', 'finally', 'raise',
+            \ 'import', 'from', 'as', 'pass', 'with', 'assert', 'yield',
+            \ 'global', 'nonlocal', 'and', 'or', 'not', 'is', 'in', 'None',
+            \ 'True', 'False', 'del', 'async', 'await',
+            \
+            \ 'func', 'package', 'import', 'type', 'interface', 'map', 'chan',
+            \ 'go', 'select', 'defer', 'fallthrough', 'range', 'var', 'iota',
+            \ 'nil', 'make', 'new', 'len', 'cap', 'panic', 'recover',
+            \
+            \ 'if', 'else', 'for', 'while', 'return', 'break', 'continue',
+            \ 'switch', 'case', 'default', 'true', 'false', 'null'
+            \ ]
+
+
 " [tags]
 "--------------------------------------------------------------------------
 " tags for ctags, path, suffixesadd for gf(go to file), :find
@@ -43,7 +65,7 @@ function! ShowFileTags()
     " Run ctags with all necessary fields
     let l:ctags_cmd = 'ctags -f - --format=2 --excmd=pattern --fields=+nks -R --sort=no --c-kinds=+pesdmvx '
     let l:ctags_result = system(l:ctags_cmd . shellescape(l:curr_file))
-    
+
     " Check if ctags command failed
     if v:shell_error
         echohl ErrorMsg
@@ -61,7 +83,7 @@ function! ShowFileTags()
     vertical resize 30
 
     let l:tags = []
-    
+
     " === Section 1: Macros ===
     let l:macros = []
     call add(l:tags, '=== Macros ===')
@@ -82,7 +104,7 @@ function! ShowFileTags()
         if len(l:parts) >= 4
             let l:name = l:parts[0]
             let l:kind = l:parts[3][0]
-            
+
             if l:kind ==# 's'
                 let l:structs[l:name] = []
             elseif l:kind ==# 'm'
@@ -99,7 +121,7 @@ function! ShowFileTags()
             endif
         endif
     endfor
-    
+
     for struct_name in sort(keys(l:structs))
         call add(l:tags, '>S ' . struct_name)
         let l:members = sort(l:structs[struct_name])
@@ -122,7 +144,7 @@ function! ShowFileTags()
         if len(l:parts) >= 4
             let l:name = l:parts[0]
             let l:kind = l:parts[3][0]
-            
+
             if l:kind ==# 'g'
                 let l:enums[l:name] = []
             elseif l:kind ==# 'e'
@@ -139,7 +161,7 @@ function! ShowFileTags()
             endif
         endif
     endfor
-    
+
     for enum_name in sort(keys(l:enums))
         call add(l:tags, '>E ' . enum_name)
         let l:members = sort(l:enums[enum_name])
@@ -179,30 +201,32 @@ function! ShowFileTags()
         endif
     endfor
     call extend(l:tags, sort(l:variables))
-    
-    " === Section 6: Function Calls ===
+
+    " === Section 6: External Calls ===
     let l:function_calls = []
     call add(l:tags, '')
     call add(l:tags, '=== External Calls ===')
-    
+
     " Parse the current buffer for function calls
     let l:buffer_content = getbufline(l:orig_bufnr, 1, '$')
     let l:seen_calls = {}
-    
+
     for line in l:buffer_content
         " Match function calls: word followed by opening parenthesis
         let l:matches = matchlist(line, '\(\w\+\)\s*(')
         if !empty(l:matches)
             let l:func_name = l:matches[1]
-            " Skip if we've seen this call before or if it's already in our tags
+            " Skip if we've seen this call before, if it's in tags, or if it's a reserved keyword
             if !has_key(l:seen_calls, l:func_name) && 
-                \ index(l:functions, '>F ' . l:func_name) == -1 && 
-                \ index(l:macros, '>M ' . l:func_name) == -1
+                        \ index(l:functions, '>F ' . l:func_name) == -1 && 
+                        \ index(l:macros, '>M ' . l:func_name) == -1 &&
+                        \ index(g:reserved_keywords, l:func_name) == -1
                 let l:seen_calls[l:func_name] = 1
                 call add(l:function_calls, '>X ' . l:func_name)
             endif
         endif
     endfor
+
     call extend(l:tags, sort(l:function_calls))
 
     " Insert tag list into buffer
@@ -376,10 +400,10 @@ set nrformats=
 " [encoding]
 "--------------------------------------------------------------------------
 " locale sensitive. but notice that korean stock market use euc-kr
-""set encoding=utf-8
+set encoding=utf-8
 ""set fileencodings=utf-8
 ""set termencoding=utf-8
-set encoding=euc-kr
+""set encoding=euc-kr
 
 " [backspace]
 "--------------------------------------------------------------------------
