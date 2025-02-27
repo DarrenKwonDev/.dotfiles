@@ -427,7 +427,7 @@ set backspace=indent,eol,start
 set t_kb=^H
 inoremap <Char-0x07F> <BS>
 inoremap <Char-0x0C> <Space>
-
+fixdel
 
 " [hidden]
 "--------------------------------------------------------------------------
