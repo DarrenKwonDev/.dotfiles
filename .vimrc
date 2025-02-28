@@ -9,6 +9,17 @@ filetype plugin indent on
 "debug print out
 "echom "[debug] Loading .vimrc..."
 
+" [global setting]
+"--------------------------------------------------------------------------
+set t_Co=256
+
+" [auto complete]
+"--------------------------------------------------------------------------
+highlight Pmenu ctermfg=white ctermbg=darkgray                                                                                                         
+highlight PmenuSel ctermfg=black ctermbg=lightgray
+
+set completeopt=menu,menuone,noselect
+" set shortmess+=c   " 하단에 메시지 표시 안 함
 
 " [vim variables]
 "--------------------------------------------------------------------------
