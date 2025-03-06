@@ -397,6 +397,15 @@ augroup highlight_current_word
     autocmd CursorMoved * exe printf('match IncSearch /\V\<%s\>/', escape(expand('<cword>'), '/\'))
 augroup END
 
+" call put highlight to poka-yoke
+highlight CallKeyword ctermbg=218 ctermfg=89 guibg=#F8BBD0 guifg=#880E4F                                                                                                                                                                                                                                                                              
+highlight PutKeyword ctermbg=152 ctermfg=25 guibg=#B3E5FC guifg=#01579B
+
+augroup CallPutHighlight
+   autocmd!
+   autocmd Syntax * syntax match CallKeyword /[cC][aA][lL][lL]/
+   autocmd Syntax * syntax match PutKeyword /[pP][uU][tT]/
+ augroup END
 
 " [tab]
 "--------------------------------------------------------------------------
