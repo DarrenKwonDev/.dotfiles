@@ -403,8 +403,8 @@ highlight PutKeyword ctermbg=152 ctermfg=25 guibg=#B3E5FC guifg=#01579B
 
 augroup CallPutHighlight
    autocmd!
-   autocmd Syntax * syntax match CallKeyword /[cC][aA][lL][lL]/
-   autocmd Syntax * syntax match PutKeyword /[pP][uU][tT]/
+   autocmd Syntax * syntax match CallKeyword /\ccall\|콜/
+   autocmd Syntax * syntax match PutKeyword /\cput\|풋/
  augroup END
 
 " [tab]
