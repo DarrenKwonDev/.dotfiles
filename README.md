@@ -17,5 +17,6 @@ can contribute to latency that may affect trading performance.
  - [ ] \<Leader\>tl: Generate tagbar using ctags for current buffer
  - [ ] Show buffer list at the top
  - [ ] Split horizontally and navigate windows using Termius (if Termius is not allowed, use tmux)
+ - [ ] highlight 'call', 'put' keyword to prevent error-prone code  
 
 <img src="./work_view.png" alt="work view" />
