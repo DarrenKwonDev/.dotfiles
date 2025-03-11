@@ -35,6 +35,10 @@ unset rc
 . "$HOME/.cargo/env"
 
 
+rm() {
+  command rm -i "$@"
+}
+
 #------------------------------------------------
 # nvim
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
