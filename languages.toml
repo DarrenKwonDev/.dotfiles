@@ -1,0 +1,21 @@
+# https://docs.helix-editor.com/languages.html
+
+[[languages.c]]
+language-server = "clangd"
+filetypes = ["c", "h"]
+roots = ["compile_commands.json", ".git"] 
+
+[[languages.cpp]]
+language-server = "clangd"
+filetypes = ["cpp", "hpp", "cc", "cxx", "h", "hh"]
+roots = ["compile_commands.json", ".git"]
+
+[[languages.go]]
+language-server = "gopls"
+filetypes = ["go"]
+roots = ["go.mod", ".git"]
+
+[[languages.rust]]
+language-server = "rust-analyzer"
+filetypes = ["rs"]
+roots = ["Cargo.toml", ".git"]
