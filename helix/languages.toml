@@ -19,3 +19,8 @@ roots = ["go.mod", ".git"]
 language-server = "rust-analyzer"
 filetypes = ["rs"]
 roots = ["Cargo.toml", ".git"]
+
+[[languages.json]]
+language-server = "vscode-json-language-server"
+filetypes = ["json"]
+roots = [".git"]
