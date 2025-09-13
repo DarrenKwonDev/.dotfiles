@@ -25,6 +25,10 @@ language-server = "bash-language-server"
 filetypes = ["sh", "bash"]
 roots = [".git"]
 
+[[languages.gas]]
+language-server = "asm-lsp"
+filetypes = ["asm", "s", "S"]
+roots = [".git"]
 
 # below lsp from https://github.com/hrsh7th/vscode-langservers-extracted
 [[languages.json]]
