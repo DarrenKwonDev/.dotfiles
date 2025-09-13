@@ -1,49 +1,31 @@
-# .bashrc
 
-# Source global definitions
-if [ -f /etc/bashrc ]; then
-	. /etc/bashrc
-fi
+#------------------------------------------------
+# path
+#------------------------------------------------
 
-# User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
-export PATH
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
-# Uncomment the following line if you don't like systemctl's auto-paging feature:
-# export SYSTEMD_PAGER=
+export PATH="$(go env GOBIN):$PATH"
+export PATH="$(asdf where nodejs)/bin:$PATH"
+export PATH="$(asdf where rust)/bin:$PATH"
 
-# User specific aliases and functions
-if [ -d ~/.bashrc.d ]; then
-	for rc in ~/.bashrc.d/*; do
-		if [ -f "$rc" ]; then
-			. "$rc"
-		fi
-	done
-fi
+#------------------------------------------------
+# alias
+#------------------------------------------------
 
-if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-fi
+alias vim=hx
+alias vi=hx
 
-
-unset rc
-. "$HOME/.cargo/env"
-
+#------------------------------------------------
+# func
+#------------------------------------------------
 
 rm() {
   command rm -i "$@"
 }
 
 #------------------------------------------------
-# nvim
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
-
-
+# prompt
 #------------------------------------------------
 parse_git_branch() {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
