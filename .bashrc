@@ -15,6 +15,7 @@ export PATH="$(asdf where rust)/bin:$PATH"
 
 alias vim=hx
 alias vi=hx
+alias z=zellij
 
 #------------------------------------------------
 # func
