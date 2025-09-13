@@ -20,7 +20,24 @@ language-server = "rust-analyzer"
 filetypes = ["rs"]
 roots = ["Cargo.toml", ".git"]
 
+[[languages.bash]]
+language-server = "bash-language-server"
+filetypes = ["sh", "bash"]
+roots = [".git"]
+
+
+# below lsp from https://github.com/hrsh7th/vscode-langservers-extracted
 [[languages.json]]
 language-server = "vscode-json-language-server"
 filetypes = ["json"]
+roots = [".git"]
+
+[[languages.html]]
+language-server = "vscode-html-language-server"
+filetypes = [".html", ".gohtml"]
+roots = [".git"]
+
+[[languages.css]]
+language-server = "vscode-css-language-server"
+filetypes = [".css"]
 roots = [".git"]
