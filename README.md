@@ -1,5 +1,10 @@
 # .dotfiles
 
+## overall dev setup
+
+asdf로 language versioning 을 활용하고 
+term split은 editor 내장 기능을 사용하되 필요시 zellij를 사용  
+
 ## helix
 
 개인적인 작업에는 helix를 쓰고 있다.  
