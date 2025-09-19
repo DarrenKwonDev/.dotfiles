@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install prequisitions
-sudo apt update && sudo apt install -y build-essential git curl wget vim tree unzip p7zip-full net-tools htop jq ripgrep fd-find bat pkg-config libssl-dev libffi-dev libsqlite3-dev libreadline-dev libbz2-dev libncurses5-dev libgdbm-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev libyaml-dev libgmp-dev libpcre3-dev -y
+sudo apt update && sudo apt install -y build-essential git curl wget vim tree unzip p7zip-full net-tools htop jq ripgrep fd-find bat pkg-config libssl-dev libffi-dev libsqlite3-dev libreadline-dev libbz2-dev libncurses5-dev libgdbm-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev libyaml-dev libgmp-dev libpcre3-dev clangd -y
 
 # x86inc.asm
 wget https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/libavutil/x86/x86inc.asm
