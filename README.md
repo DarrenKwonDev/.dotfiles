@@ -1,8 +1,12 @@
-# air-gapped-dotfiles
+# .dotfiles
 
-```text
-개인적인 작업에는 helix를 쓰고 있다. neovim configuration이나 deps break에 대응하기가 번거로워서  
-```
+## helix
+
+개인적인 작업에는 helix를 쓰고 있다.  
+PATH에 lsp만 잘 잡아주면 작업하는데 불편하지 않다.  
+무엇보다 neovim configuration이나 deps break에 대응하는데 시간을 쏟고 싶지 않다  
+
+## vim
 
 폐쇄망 환경(ex - 증권사에서 제공하는 DMA) 내에서 개발을 해야 하는 경우  
 순수한 vim과 ctag 같은 기본적인 도구만으로 개발을 해야 하는 상황이 있음.  
@@ -17,3 +21,4 @@ latency에 기여하여 매매에 영향을 미치기도 한다.
  - [ ] highlight 'call', '콜', 'put', '풋' keyword to prevent error-prone code  
 
 <img src="./work_view.png" alt="work view" />
+
