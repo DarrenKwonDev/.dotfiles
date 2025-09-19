@@ -7,8 +7,8 @@ sudo apt update && sudo apt install -y build-essential git curl wget vim tree un
 sudo apt install -y autotools-dev automake bsdmainutils python3 libevent-dev libminiupnpc-dev libzmq3-dev libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
 
 # pick full install or partial install what you need
-sudo apt install libboost-all-dev
-sudo apt install libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev
+sudo apt install -y libboost-all-dev
+sudo apt install -y libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev
 
 # x86inc.asm
 wget https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/libavutil/x86/x86inc.asm
