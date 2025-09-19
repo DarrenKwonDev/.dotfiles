@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # install prequisitions
-sudo apt update && sudo apt install -y build-essential git curl wget vim tree unzip p7zip-full net-tools htop jq ripgrep fd-find bat pkg-config libtool libssl-dev libffi-dev libsqlite3-dev libreadline-dev libbz2-dev libncurses5-dev libgdbm-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev libyaml-dev libgmp-dev libpcre3-dev clangd -y
+sudo apt update && sudo apt install -y build-essential git curl wget vim tree unzip p7zip-full net-tools htop jq ripgrep fd-find bat pkg-config libtool libssl-dev libffi-dev libsqlite3-dev libreadline-dev libbz2-dev libncurses5-dev libgdbm-dev liblzma-dev zlib1g-dev libxml2-dev libxslt1-dev libyaml-dev libgmp-dev libpcre3-dev tk-dev clangd -y
 
 # bitcoin daemon dependencies (https://github.com/bitcoin/bitcoin/blob/master/doc/dependencies.md)
 sudo apt install -y autotools-dev automake bsdmainutils python3 libevent-dev libminiupnpc-dev libzmq3-dev libqt5gui5 libqt5core5a libqt5dbus5 qttools5-dev qttools5-dev-tools libprotobuf-dev protobuf-compiler
