@@ -9,6 +9,8 @@ export PATH="$(go env GOBIN):$PATH"
 export PATH="$(asdf where nodejs)/bin:$PATH"
 export PATH="$(asdf where rust)/bin:$PATH"
 
+export PATH="$HOME/.local/bin:$PATH" # uv, uvx
+
 #------------------------------------------------
 # alias
 #------------------------------------------------
