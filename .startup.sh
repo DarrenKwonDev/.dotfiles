@@ -13,6 +13,9 @@ sudo apt install -y lm-sensors smartmontools sysstat stress memtest86+ fio
 sudo apt install -y libboost-all-dev
 sudo apt install -y libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev
 
+# utils
+sudo apt install -y radare2  
+
 # x86inc.asm
 wget https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/libavutil/x86/x86inc.asm
 
