@@ -14,7 +14,7 @@ sudo apt install -y libboost-all-dev
 sudo apt install -y libboost-system-dev libboost-filesystem-dev libboost-test-dev libboost-thread-dev
 
 # utils
-sudo apt install -y radare2  
+sudo apt install -y radare2 hping3  
 
 # x86inc.asm
 wget https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/libavutil/x86/x86inc.asm
