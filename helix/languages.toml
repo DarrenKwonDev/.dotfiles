@@ -45,3 +45,18 @@ roots = [".git"]
 language-server = "vscode-css-language-server"
 filetypes = [".css"]
 roots = [".git"]
+
+
+[[languages.javascript]]
+language-server = "typescript-language-server"
+formatter = { command = "npx", args = ["prettier", "--parser", "javascript"] }
+auto-format = true
+filetypes = [".js"]
+roots = [".git"]
+
+[[languages.typescript]]
+language-server = "typescript-language-server"
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
+auto-format = true
+filetypes = [".ts"]
+roots = [".git"]
