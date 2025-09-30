@@ -26,3 +26,7 @@ wget https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/libavutil/x86/x86inc
 # install language server
 
 # install helix and copy config from github
+
+# etc
+npm install -g wscat
+go install golang.org/x/tools/gopls@latest
