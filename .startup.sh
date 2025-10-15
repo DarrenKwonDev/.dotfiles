@@ -16,6 +16,9 @@ sudo apt install -y libboost-system-dev libboost-filesystem-dev libboost-test-de
 # utils
 sudo apt install -y radare2 hping3  
 
+# foundry
+curl -L https://foundry.paradigm.xyz | bash  
+
 # x86inc.asm
 wget https://raw.githubusercontent.com/FFmpeg/FFmpeg/master/libavutil/x86/x86inc.asm
 
