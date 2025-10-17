@@ -60,3 +60,15 @@ formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
 auto-format = true
 filetypes = [".ts"]
 roots = [".git"]
+
+# npm install -g @nomicfoundation/solidity-language-server
+[[language]]
+name = "solidity"
+language-servers = ["solidity-ls"]
+formatter = { command = "forge", args = ["fmt", "-"] }
+auto-format = true
+roots = ["foundry.toml", ".git"]
+
+[language-server.solidity-ls]
+command = "nomicfoundation-solidity-language-server"
+args = ["--stdio"]
