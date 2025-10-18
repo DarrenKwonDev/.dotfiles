@@ -65,7 +65,7 @@ roots = [".git"]
 [[language]]
 name = "solidity"
 language-servers = ["solidity-ls"]
-formatter = { command = "forge", args = ["fmt", "-"] }
+formatter = { command = "prettier", args = ["--parser", "solidity-parse", "--plugin", "prettier-plugin-solidity"] }
 auto-format = true
 roots = ["foundry.toml", ".git"]
 
