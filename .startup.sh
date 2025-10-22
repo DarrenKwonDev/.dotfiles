@@ -15,6 +15,7 @@ sudo apt install -y libboost-system-dev libboost-filesystem-dev libboost-test-de
 
 # utils
 sudo apt install -y radare2 hping3  
+sudo apt install -y pandoc  
 
 # foundry
 curl -L https://foundry.paradigm.xyz | bash  
