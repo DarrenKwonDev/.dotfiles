@@ -72,3 +72,7 @@ roots = ["foundry.toml", ".git"]
 [language-server.solidity-ls]
 command = "nomicfoundation-solidity-language-server"
 args = ["--stdio"]
+
+[[language]]
+name = "python"
+language-servers = ["pyright", "ruff"]
