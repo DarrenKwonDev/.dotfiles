@@ -10,10 +10,18 @@ language-server = "clangd"
 filetypes = ["cpp", "hpp", "cc", "cxx", "h", "hh"]
 roots = ["compile_commands.json", ".git"]
 
-[[languages.go]]
-language-server = "gopls"
+[[languages]]
+name="go"
+auto-format = true
+language-servers = [ "gopls", "golangci-lint-lsp" ]
 filetypes = ["go"]
 roots = ["go.mod", ".git"]
+
+[language-server.golangci-lint-lsp]
+command = "golangci-lint-langserver"
+
+[language-server.golangci-lint-lsp.config]
+command = ["golangci-lint", "run", "--output.json.path", "stdout", "--show-stats=false", "--issues-exit-code=1"]
 
 [[languages.rust]]
 language-server = "rust-analyzer"
