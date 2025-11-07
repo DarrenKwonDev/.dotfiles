@@ -18,6 +18,8 @@ export PATH="$HOME/.local/bin:$PATH" # uv, uvx
 alias vim=hx
 alias vi=hx
 alias z=zellij
+alias c=claude
+alias cy="claude --dangerously-skip-permissions"
 
 #------------------------------------------------
 # func
