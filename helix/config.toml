@@ -4,6 +4,7 @@ theme = "onedark"
 true-color = true
 line-number = "relative"
 bufferline = "always"
+auto-pairs = true
 
 [editor.cursor-shape]
 insert = "bar"
@@ -11,4 +12,4 @@ normal = "block"
 select = "underline"
 
 [editor.file-picker]
-hidden = false
+hidden = false  
