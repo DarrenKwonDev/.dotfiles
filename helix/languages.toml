@@ -1,20 +1,22 @@
 # https://docs.helix-editor.com/languages.html
 
-[[languages.c]]
-language-server = "clangd"
-filetypes = ["c", "h"]
+[[language]]
+name = "c"
+language-servers = ["clangd"]
+file-types = ["c", "h"]
 roots = ["compile_commands.json", ".git"] 
 
-[[languages.cpp]]
-language-server = "clangd"
-filetypes = ["cpp", "hpp", "cc", "cxx", "h", "hh"]
+[[language]]
+name = "cpp"
+language-servers = ["clangd"]
+file-types = ["cpp", "hpp", "cc", "cxx", "h", "hh"]
 roots = ["compile_commands.json", ".git"]
 
 [[language]]
 name="go"
-auto-format = true
 language-servers = [ "gopls", "golangci-lint-lsp" ]
 file-types = ["go"]
+auto-format = true
 roots = ["go.mod", ".git"]
 
 [language-server.golangci-lint-lsp]
@@ -23,51 +25,65 @@ command = "golangci-lint-langserver"
 [language-server.golangci-lint-lsp.config]
 command = ["golangci-lint", "run", "--output.json.path", "stdout", "--show-stats=false", "--issues-exit-code=1"]
 
-[[languages.rust]]
-language-server = "rust-analyzer"
-filetypes = ["rs"]
+[[language]]
+name = "rust"
+language-servers = ["rust-analyzer"]
+file-types = ["rs"]
 roots = ["Cargo.toml", ".git"]
 
-[[languages.bash]]
-language-server = "bash-language-server"
-filetypes = ["sh", "bash"]
+[[language]]
+name = "bash"
+language-servers = ["bash-language-server"]
+file-types = ["sh", "bash"]
 roots = [".git"]
 
-[[languages.gas]]
-language-server = "asm-lsp"
-filetypes = ["asm", "s", "S"]
+[[language]]
+name = "gas"
+language-servers = ["asm-lsp"]
+file-types = ["asm", "s", "S"]
 roots = [".git"]
 
 # below lsp from https://github.com/hrsh7th/vscode-langservers-extracted
-[[languages.json]]
-language-server = "vscode-json-language-server"
-filetypes = ["json"]
+[[language]]
+name = "json"
+language-servers = ["vscode-json-language-server"]
+file-types = ["json"]
 roots = [".git"]
 
-[[languages.html]]
-language-server = "vscode-html-language-server"
-filetypes = [".html", ".gohtml"]
+[[language]]
+name = "html"
+language-servers = ["vscode-html-language-server"]
+file-types = ["html", "gohtml"]
+auto-pairs = {'{' = '}', '(' = ')', '<' = '>', '"' = '"', "'" = "'"}
 roots = [".git"]
 
-[[languages.css]]
-language-server = "vscode-css-language-server"
-filetypes = [".css"]
+[[language]]
+name = "css"
+language-servers = ["vscode-css-language-server"]
+file-types = [".css"]
 roots = [".git"]
 
 
-[[languages.javascript]]
-language-server = "typescript-language-server"
-formatter = { command = "npx", args = ["prettier", "--parser", "javascript"] }
-auto-format = true
-filetypes = [".js"]
-roots = [".git"]
+[[language]]
+name = "javascript"
+language-servers = ["typescript-language-server"]
+formatter = { command = "npx", args = ["prettier", "--stdin-filepath", "%file"] }
+file-types = ["js"]
 
-[[languages.typescript]]
-language-server = "typescript-language-server"
-formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
-auto-format = true
-filetypes = [".ts"]
-roots = [".git"]
+[[language]]
+name = "typescript"
+language-servers = ["typescript-language-server"]
+formatter = { command = "npx", args = ["prettier", "--stdin-filepath", "%file"] }
+file-types = ["ts"]
+
+[[language]]
+name = "jsx"
+auto-pairs = {'{' = '}', '(' = ')', '<' = '>', '"' = '"', "'" = "'"}
+
+[[language]]
+name = "tsx"
+auto-pairs = {'{' = '}', '(' = ')', '<' = '>', '"' = '"', "'" = "'"}
+
 
 # npm install -g @nomicfoundation/solidity-language-server
 [[language]]
