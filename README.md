@@ -3,7 +3,8 @@
 ## overall dev setup
 
 asdf로 language versioning 을 활용하고 
-term split은 editor 내장 기능을 사용하되 필요시 zellij를 사용  
+term split은 editor 내장 기능을 사용하되 분리가 필요하면 wezterm에서 곧장 분리한다.
+zellij나 tmux 둘 다 조작하기가 번거롭다고 생각    
 
 ## helix
 
