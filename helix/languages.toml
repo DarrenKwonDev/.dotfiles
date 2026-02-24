@@ -30,6 +30,10 @@ name = "rust"
 language-servers = ["rust-analyzer"]
 file-types = ["rs"]
 roots = ["Cargo.toml", ".git"]
+auto-format = true
+formatter = { command = "rustup", args = ["run", "nightly", "rustfmt"] }
+indent = { tab-width = 4, unit = "    " }
+
 
 [[language]]
 name = "bash"
